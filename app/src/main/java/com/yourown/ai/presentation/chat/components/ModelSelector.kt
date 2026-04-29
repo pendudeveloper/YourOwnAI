@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.yourown.ai.domain.model.DownloadStatus
+import com.yourown.ai.domain.model.familyGroup
+import com.yourown.ai.domain.model.familySortOrder
 import com.yourown.ai.domain.model.LocalModel
 import com.yourown.ai.domain.model.LocalModelInfo
 import com.yourown.ai.domain.model.ModelProvider
@@ -91,14 +93,22 @@ fun ModelSelector(
                 val apiModels = availableModels.filterIsInstance<ModelProvider.API>()
                 
                 // Sort models: pinned first, then others
-                fun sortByPinned(models: List<ModelProvider>): List<ModelProvider> {
+                fun <T : ModelProvider> sortByPinned(models: List<T>): List<T> {
                     val pinned = models.filter { it.getModelKey() in pinnedModels }
                     val unpinned = models.filter { it.getModelKey() !in pinnedModels }
                     return pinned + unpinned
                 }
                 
                 val sortedLocalModels = sortByPinned(localModelProviders)
-                val sortedApiModels = sortByPinned(apiModels)
+                val groupedApiModels = apiModels
+                    .groupBy { it.familyGroup() }
+                    .toList()
+                    .sortedWith(
+                        compareBy<Pair<String, List<ModelProvider.API>>>(
+                            { it.second.firstOrNull()?.familySortOrder() ?: Int.MAX_VALUE },
+                            { it.first }
+                        )
+                    )
                 
                 // Local models section
                 if (sortedLocalModels.isNotEmpty()) {
@@ -129,8 +139,8 @@ fun ModelSelector(
                     }
                 }
                 
-                // API models section
-                if (sortedApiModels.isNotEmpty()) {
+                // API models section grouped by family
+                if (groupedApiModels.isNotEmpty()) {
                     if (sortedLocalModels.isNotEmpty()) {
                         Divider(modifier = Modifier.padding(vertical = 4.dp))
                     }
@@ -140,21 +150,34 @@ fun ModelSelector(
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    sortedApiModels.forEach { provider ->
-                        ModelMenuItem(
-                            provider = provider,
-                            isSelected = selectedModel == provider,
-                            isPinned = provider.getModelKey() in pinnedModels,
-                            modelInfo = null,
-                            onSelect = {
-                                onModelSelect(provider)
-                                expanded = false
-                            },
-                            onDownload = {},
-                            onTogglePinned = {
-                                onTogglePinned(provider)
-                            }
+                    groupedApiModels.forEachIndexed { index, (family, modelsInFamily) ->
+                        if (index > 0) {
+                            Divider(modifier = Modifier.padding(vertical = 2.dp))
+                        }
+
+                        Text(
+                            text = family,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.primary
                         )
+
+                        sortByPinned(modelsInFamily.sortedBy { it.displayName }).forEach { provider ->
+                            ModelMenuItem(
+                                provider = provider,
+                                isSelected = selectedModel == provider,
+                                isPinned = provider.getModelKey() in pinnedModels,
+                                modelInfo = null,
+                                onSelect = {
+                                    onModelSelect(provider)
+                                    expanded = false
+                                },
+                                onDownload = {},
+                                onTogglePinned = {
+                                    onTogglePinned(provider)
+                                }
+                            )
+                        }
                     }
                 }
             }

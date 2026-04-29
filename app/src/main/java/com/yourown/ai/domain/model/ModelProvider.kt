@@ -64,6 +64,16 @@ enum class OpenAIModel(
     val description: String
 ) {
     // GPT-5 Series (Latest)
+    GPT_5_5(
+        modelId = "gpt-5.5",
+        displayName = "GPT-5.5",
+        description = "Newest frontier model for complex coding and professional work"
+    ),
+    GPT_5_4(
+        modelId = "gpt-5.4",
+        displayName = "GPT-5.4",
+        description = "Most capable model for complex professional work"
+    ),
     GPT_5_2(
         modelId = "gpt-5.2",
         displayName = "GPT-5.2",
@@ -182,6 +192,11 @@ enum class OpenRouterModel(
         displayName = "Claude Opus 4.6",
         description = "Most capable, best for complex tasks"
     ),
+    CLAUDE_OPUS_4_7(
+        modelId = "anthropic/claude-opus-4.7",
+        displayName = "Claude Opus 4.7",
+        description = "Next-generation Opus for long-running and asynchronous agents"
+    ),
     CLAUDE_OPUS_4_5(
         modelId = "anthropic/claude-opus-4.5",
         displayName = "Claude Opus 4.5",
@@ -235,10 +250,20 @@ enum class OpenRouterModel(
         displayName = "Gemini 3 Pro Preview",
         description = "Advanced reasoning with thinking capabilities"
     ),
+    GEMINI_3_1_PRO_PREVIEW_CUSTOMTOOLS(
+        modelId = "google/gemini-3.1-pro-preview-customtools",
+        displayName = "Gemini 3.1 Pro Preview Custom Tools",
+        description = "Gemini 3.1 Pro variant optimized for reliable tool selection"
+    ),
     GEMINI_3_FLASH_PREVIEW(
         modelId = "google/gemini-3-flash-preview",
         displayName = "Gemini 3 Flash Preview",
         description = "Fast reasoning with preview features"
+    ),
+    GEMINI_3_1_FLASH_LITE_PREVIEW(
+        modelId = "google/gemini-3.1-flash-lite-preview",
+        displayName = "Gemini 3.1 Flash Lite Preview",
+        description = "High-efficiency Gemini 3.1 model for fast, low-cost workloads"
     ),
     
     // Gemini 2.5 Series (multimodal support)
@@ -251,6 +276,13 @@ enum class OpenRouterModel(
         modelId = "google/gemini-2.5-flash",
         displayName = "Gemini 2.5 Flash",
         description = "Fast multimodal with 1M+ context"
+    ),
+
+    // Gemma Series
+    GEMMA_4_31B_IT(
+        modelId = "google/gemma-4-31b-it",
+        displayName = "Gemma 4 31B",
+        description = "Multimodal Gemma with text and image input"
     ),
 
     // Nous: Hermes
@@ -277,16 +309,93 @@ enum class OpenRouterModel(
     // Qwen3 Max
     QWEN_3_MAX(
         modelId = "qwen/qwen3-max",
-        displayName = "Qwen 3",
+        displayName = "Qwen 3 max",
         description = "major improvements in reasoning, instruction following, multilingual support, and long-tail knowledge coverage compared to the January 2025 version."
     ),
 
-    // OpenAI GPT-4o Series
-    GPT_4O(
-        modelId = "openai/gpt-4o",
-        displayName = "GPT-4o (Latest)",
-        description = "Latest GPT-4o with multimodal support"
+    QWEN_3_5_PLUS(
+        modelId = "qwen/qwen3.5-plus-02-15",
+        displayName = "Qwen 3.5 plus",
+        description = "major improvements in reasoning, instruction following, multilingual support, and long-tail knowledge coverage compared to the January 2025 version."
     ),
+
+    QWEN_3_14(
+        modelId = "qwen/qwen3-14b",
+        displayName = "Qwen 3.14b",
+        description = "major improvements in reasoning, instruction following, multilingual support, and long-tail knowledge coverage compared to the January 2025 version."
+    ),
+    QWEN_3_6_PLUS(
+        modelId = "qwen/qwen3.6-plus",
+        displayName = "Qwen 3.6 Plus",
+        description = "Strong agentic coding model with multimodal capabilities and 1M context"
+    ),
+
+
+    // GLM5
+    GLM_5(
+        modelId = "z-ai/glm-5",
+        displayName = "GLM 5",
+        description = "complex systems design and long-horizon agent workflows"
+    ),
+    GLM_5_1(
+        modelId = "z-ai/glm-5.1",
+        displayName = "GLM 5.1",
+        description = "Major leap in coding capability for long-horizon autonomous tasks"
+    ),
+
+    // Ernie 4.5
+    ERNIE_4_5(
+        modelId = "baidu/ernie-4.5-vl-424b-a47b",
+        displayName = "Ernie 4.5",
+        description = "high-fidelity cross-modal reasoning, image understanding, and long-context generation (up to 131k tokens)"
+    ),
+
+    // Ernie 4.5
+    KIMI_K_2_5(
+        modelId = "moonshotai/kimi-k2.5",
+        displayName = "Kimi K 2.5",
+        description = "general reasoning, visual coding, and agentic tool-calling."
+    ),
+
+    // MiMo Series
+    MIMO_V2_5_PRO(
+        modelId = "xiaomi/mimo-v2.5-pro",
+        displayName = "MiMo V2.5 Pro",
+        description = "Flagship Xiaomi model for agentic capabilities and software engineering"
+    ),
+    MIMO_V2_OMNI(
+        modelId = "xiaomi/mimo-v2-omni",
+        displayName = "MiMo V2 Omni",
+        description = "Omni-modal model with image, video, and audio input"
+    ),
+
+    // DeepSeek Series
+    DEEPSEEK_V4_PRO(
+        modelId = "deepseek/deepseek-v4-pro",
+        displayName = "DeepSeek V4 Pro",
+        description = "Large-scale MoE model for advanced reasoning and long-horizon workflows"
+    ),
+    DEEPSEEK_V4_FLASH(
+        modelId = "deepseek/deepseek-v4-flash",
+        displayName = "DeepSeek V4 Flash",
+        description = "Efficiency-optimized DeepSeek V4 for fast inference and coding"
+    ),
+
+    // Deepseek v3.1 terminus
+    DEEPSEEK_K_2_5(
+        modelId = "deepseek/deepseek-v3.1-terminus",
+        displayName = "Deepseek v3.1 terminus",
+        description = "general reasoning, visual coding, and agentic tool-calling."
+    ),
+
+    // nex-agi/deepseek-v3.1-nex-n1
+    DEEPSEEK_V_3_1_NEX_N_1(
+        modelId = "nex-agi/deepseek-v3.1-nex-n1",
+        displayName = "Deepseek v3.1 nex n1",
+        description = "general reasoning, visual coding, and agentic tool-calling."
+    ),
+
+    // OpenAI GPT-4o Series
     GPT_4O_EXTENDED(
         modelId = "openai/gpt-4o:extended",
         displayName = "GPT-4o Extended",
@@ -305,4 +414,49 @@ enum class OpenRouterModel(
             displayName = displayName
         )
     }
+}
+
+fun ModelProvider.API.familyGroup(): String = when (provider) {
+    AIProvider.OPENAI -> if (modelId.startsWith("o")) "OpenAI • o-series" else "OpenAI • GPT"
+    AIProvider.XAI -> "xAI • Grok"
+    AIProvider.DEEPSEEK -> "DeepSeek"
+    AIProvider.OPENROUTER -> when {
+        modelId.startsWith("anthropic/claude-") -> "Claude"
+        modelId.startsWith("google/gemini") -> "Gemini"
+        modelId.startsWith("google/gemma") -> "Gemma"
+        modelId.startsWith("deepseek/") || modelId.startsWith("nex-agi/deepseek") -> "DeepSeek"
+        modelId.startsWith("openai/") -> "GPT"
+        modelId.startsWith("qwen/") -> "Qwen"
+        modelId.startsWith("z-ai/glm") -> "GLM"
+        modelId.startsWith("xiaomi/mimo") -> "MiMo"
+        modelId.startsWith("meta-llama/") || modelId.startsWith("sao10k/") || modelId.contains("llama") -> "Llama"
+        modelId.startsWith("moonshotai/kimi") -> "Kimi"
+        modelId.startsWith("baidu/ernie") -> "Ernie"
+        modelId.startsWith("mistralai/") -> "Mistral"
+        modelId.startsWith("cohere/") -> "Cohere"
+        modelId.startsWith("nousresearch/") -> "Nous"
+        else -> "Other"
+    }
+    else -> provider.displayName
+}
+
+fun ModelProvider.API.familySortOrder(): Int = when (familyGroup()) {
+    "OpenAI • GPT" -> 0
+    "OpenAI • o-series" -> 1
+    "xAI • Grok" -> 2
+    "Claude" -> 3
+    "Gemini" -> 4
+    "Gemma" -> 5
+    "DeepSeek" -> 6
+    "Qwen" -> 7
+    "GLM" -> 8
+    "MiMo" -> 9
+    "Llama" -> 10
+    "Kimi" -> 11
+    "Ernie" -> 12
+    "Mistral" -> 13
+    "Cohere" -> 14
+    "Nous" -> 15
+    "Other" -> 16
+    else -> 99
 }

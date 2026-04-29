@@ -20,7 +20,7 @@ data class ModelCapabilities(
         fun forModel(modelId: String): ModelCapabilities {
             return when (modelId.lowercase()) {
                 // OpenAI Models
-                "gpt-5.2" -> ModelCapabilities(
+                "gpt-5.5", "gpt-5.4", "gpt-5.2" -> ModelCapabilities(
                     supportsVision = true,
                     supportsDocuments = true,
                     supportsWebSearch = true,
@@ -37,7 +37,7 @@ data class ModelCapabilities(
                         maxSizePerDocumentMB = 50
                     ),
                     totalAttachmentsLimit = 500,
-                    notes = "GPT-5.2: Up to 500 images or files, 50MB total payload. Web search via Responses API."
+                    notes = "GPT-5.5 / GPT-5.4 / GPT-5.2: Text + image input, document/file support, and web search via Responses API. Up to 500 images or files, 50MB total payload."
                 )
                 
                 // GPT-5.1 - Coding focused with vision and PDF support
@@ -149,7 +149,7 @@ data class ModelCapabilities(
                 
                 // Claude Models via OpenRouter - Full multimodal support
                 "anthropic/claude-sonnet-4.5", "anthropic/claude-opus-4.5",
-                "anthropic/claude-opus-4.6",
+                "anthropic/claude-opus-4.6", "anthropic/claude-opus-4.7",
                 "anthropic/claude-haiku-4.5", "anthropic/claude-sonnet-4",
                 "anthropic/claude-3.7-sonnet", "anthropic/claude-3.5-haiku" -> ModelCapabilities(
                     supportsVision = true,
@@ -221,15 +221,49 @@ data class ModelCapabilities(
                 )
 
                 // Qwen3 Max - via OpenRouter
-                "qwen/qwen3-max" -> ModelCapabilities(
+                "qwen/qwen3-max", "qwen/qwen3-14b", "qwen/qwen3.5-plus-02-15",
+                "z-ai/glm-5", "z-ai/glm-5.1",
+                "deepseek/deepseek-v4-pro", "deepseek/deepseek-v4-flash",
+                "xiaomi/mimo-v2.5-pro" -> ModelCapabilities(
                     supportsVision = false,
                     supportsDocuments = false,
                     supportsWebSearch = true,
-                    notes = "major improvements in reasoning, instruction following, multilingual support, and long-tail knowledge coverage compared to the January 2025 version. Web search via :online."
+                    notes = "Text-first reasoning/coding model via OpenRouter. No confirmed image or file input in this app. Web search via :online."
+                )
+
+                "baidu/ernie-4.5-vl-424b-a47b", "moonshotai/kimi-k2.5" -> ModelCapabilities(
+                    supportsVision = true,
+                    supportsDocuments = false, // No PDF support confirmed yet
+                    supportsWebSearch = true,
+                    imageSupport = ImageSupport(
+                        maxImages = 10, // Up to 10 images per request (tested up to 8, supports 10)
+                        supportedFormats = listOf("jpeg", "jpg", "png", "gif", "webp"),
+                        maxSizePerImageMB = 20, // Conservative estimate
+                        maxTotalPayloadMB = 100, // Reasonable total payload
+                        supportsDetail = true // Native multimodal with early fusion
+                    ),
+                    totalAttachmentsLimit = 10,
+                    notes = "Llama 4: Up to 10 images. Native multimodal with early fusion. Pre-trained on 48 images. Web search via :online. Via OpenRouter."
+                )
+
+                "qwen/qwen3.6-plus", "xiaomi/mimo-v2-omni", "google/gemma-4-31b-it" -> ModelCapabilities(
+                    supportsVision = true,
+                    supportsDocuments = false,
+                    supportsWebSearch = true,
+                    imageSupport = ImageSupport(
+                        maxImages = 10,
+                        supportedFormats = listOf("jpeg", "jpg", "png", "gif", "webp"),
+                        maxSizePerImageMB = 20,
+                        maxTotalPayloadMB = 100,
+                        supportsDetail = true
+                    ),
+                    totalAttachmentsLimit = 10,
+                    notes = "Multimodal model with image input support via OpenRouter. No confirmed native document/PDF flow in this app, so file attachments stay disabled."
                 )
 
                 // Gemini 3 & 2.5 Models via OpenRouter - Full multimodal support
                 "google/gemini-3-pro-preview", "google/gemini-3-flash-preview",
+                "google/gemini-3.1-pro-preview-customtools", "google/gemini-3.1-flash-lite-preview",
                 "google/gemini-2.5-pro", "google/gemini-2.5-flash" -> ModelCapabilities(
                     supportsVision = true,
                     supportsDocuments = true, // Full PDF support
@@ -248,7 +282,7 @@ data class ModelCapabilities(
                         requiresOCR = false // Native document processing
                     ),
                     totalAttachmentsLimit = 10, // Consumer: 10 files per prompt. Enterprise: 3,000
-                    notes = "Gemini: Up to 10 files (100MB each). PDF support up to 30MB/2000 pages. Text, images, audio, video. Web search via :online. Via OpenRouter."
+                    notes = "Gemini 3/3.1/2.5: Up to 10 files (100MB each). PDF support up to 30MB/2000 pages. Multimodal input with web search via :online. Via OpenRouter."
                 )
                 
                 // OpenRouter GPT-4o via OpenRouter proxy
@@ -266,7 +300,14 @@ data class ModelCapabilities(
                     totalAttachmentsLimit = 100,
                     notes = "GPT-4o (via OpenRouter): Latest version with vision support. Web search via :online."
                 )
-                
+
+                "deepseek/deepseek-v3.1-terminus, nex-agi/deepseek-v3.1-nex-n1" -> ModelCapabilities(
+                    supportsVision = false, // Extended variant does NOT support vision on OpenRouter
+                    supportsDocuments = false,
+                    supportsWebSearch = true,
+                    totalAttachmentsLimit = 0,
+                    notes = "Complex systems design and long-horizon agent workflows. Web search via :online."
+                )
                 "openai/gpt-4o:extended" -> ModelCapabilities(
                     supportsVision = false, // Extended variant does NOT support vision on OpenRouter
                     supportsDocuments = false,

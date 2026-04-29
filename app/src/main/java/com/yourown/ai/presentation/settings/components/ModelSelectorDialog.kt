@@ -18,7 +18,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.yourown.ai.R
 import com.yourown.ai.domain.model.ModelProvider
-import com.yourown.ai.domain.model.AIProvider
+import com.yourown.ai.domain.model.familyGroup
+import com.yourown.ai.domain.model.familySortOrder
 
 @Composable
 fun ModelSelectorDialog(
@@ -68,22 +69,29 @@ fun ModelSelectorDialog(
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // Group by provider
+                    // Group by model family
                     val groupedModels = availableModels
                         .filterIsInstance<ModelProvider.API>()
-                        .groupBy { it.provider }
+                        .groupBy { it.familyGroup() }
+                        .toList()
+                        .sortedWith(
+                            compareBy<Pair<String, List<ModelProvider.API>>>(
+                                { it.second.firstOrNull()?.familySortOrder() ?: Int.MAX_VALUE },
+                                { it.first }
+                            )
+                        )
                     
-                    groupedModels.forEach { (provider, models) ->
+                    groupedModels.forEach { (family, models) ->
                         item {
                             Text(
-                                text = provider.name,
+                                text = family,
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.padding(vertical = 8.dp)
                             )
                         }
                         
-                        items(models) { model ->
+                        items(models.sortedBy { it.displayName }) { model ->
                             ModelItem(
                                 model = model,
                                 isSelected = selectedModel?.getModelKey() == model.getModelKey(),

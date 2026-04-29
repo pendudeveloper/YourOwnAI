@@ -38,9 +38,11 @@ class OpenAIClient(
             "o1", "o1-preview", "o1-mini", "o3", "o3-mini"
         )
         
-        // Reasoning models that don't support temperature/top_p
+        // Models that should use default sampling only.
+        // We currently know GPT-5.5 rejects custom temperature values.
+        // o-series reasoning models also don't support temperature/top_p.
         private val REASONING_MODELS = setOf(
-            "o1", "o1-preview", "o1-mini", "o3", "o3-mini"
+            "gpt-5.5", "o1", "o1-preview", "o1-mini", "o3", "o3-mini"
         )
         
         private fun shouldUseMaxCompletionTokens(model: String): Boolean {
