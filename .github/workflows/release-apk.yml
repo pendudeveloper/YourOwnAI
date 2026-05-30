@@ -2,26 +2,55 @@ name: Build Release APK
 
 on:
   workflow_dispatch:
+    inputs:
+      release_name:
+        description: 'Release name (e.g., v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+      release_notes:
+        description: 'Release notes/changelog'
+        required: false
+        default: 'YourOwnAI Release Build'
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: 17
+          distribution: 'temurin'
+          java-version: '17'
+          cache: gradle
 
-      - uses: gradle/actions/setup-gradle@v4
+      - name: Make gradlew executable
+        run: chmod +x gradlew
 
       - name: Build Release APK
-        run: gradle assembleRelease
+        run: ./gradlew assembleRelease
 
-      - name: Upload Release APK
+      - name: List build outputs
+        run: ls -la app/build/outputs/apk/release/
+
+      - name: Upload APK to artifacts
         uses: actions/upload-artifact@v4
         with:
           name: YourOwnAI-release-apk
           path: app/build/outputs/apk/release/*.apk
+          retention-days: 90
+
+      - name: Create GitHub Release with APK
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.inputs.release_name }}
+          name: ${{ github.event.inputs.release_name }}
+          body: ${{ github.event.inputs.release_notes }}
+          files: app/build/outputs/apk/release/*.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
