@@ -97,3 +97,22 @@
 -dontwarn com.google.errorprone.annotations.InlineMe
 -dontwarn com.google.errorprone.annotations.RestrictedApi
 -dontwarn org.joda.time.Instant
+
+
+# Netty / Reactor optional classes
+-dontwarn io.netty.**
+-dontwarn org.apache.logging.log4j.**
+-dontwarn org.slf4j.**
+-dontwarn org.eclipse.jetty.**
+-dontwarn reactor.blockhound.**
+
+# Kotlin metadata warning from newer dependency
+-dontwarn kotlin.**
+-dontwarn kotlinx.**
+
+# Keep Llamatik + native JNI
+-keep class com.llamatik.** { *; }
+-keep class ai.liquid.leap.** { *; }
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
